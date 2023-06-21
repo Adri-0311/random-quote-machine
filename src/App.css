@@ -1,0 +1,16 @@
+.container > .row {
+  height: 100vh;
+}
+
+#quote-box {
+  background-color: var(--quote-bg-color);
+  box-shadow: 0 10px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+#quote-box #text {
+  color: var(--quote-color);
+}
+
+#quote-box #author {
+  color: var(--author-color);
+}
