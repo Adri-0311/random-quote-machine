@@ -12,7 +12,7 @@ function App() {
     },
   ]);
 
-  const setTweetLink = (quote, author ) => {
+  const setTweetLink = (quote, author) => {
     buttonTweet.current.href = `https://twitter.com/intent/tweet?hashtags=quotes&related=freecodecamp&text=${encodeURIComponent(
       `"${quote}" ${author}`
     )}`;
@@ -28,42 +28,52 @@ function App() {
   useEffect(newQuote, []);
 
   return (
-    <div className="container">
-      <div className="row justify-content-center align-items-center">
-        <div className="col-8 p-4 rounded" id="quote-box">
-          <h3 id="text" className="text-center">
-            <i className="me-2 fa-solid fa-quote-left"></i>
-            {quoteData[0].quote}
-          </h3>
-          <p id="author" className="text-end">
+    <div className='container'>
+      <div className='row justify-content-center align-items-center'>
+        <div className='col-8 p-4 mb-4 rounded' id='quote-box'>
+          <blockquote id='text' className='text-center'>
+            <p>
+              <i className='me-2 fa-solid fa-quote-left'></i>
+              {quoteData[0].quote}
+            </p>
+          </blockquote>
+          <p id='author' className='text-end'>
             - <span>{quoteData[0].author}</span>
           </p>
-          <div className="btn-container d-flex justify-content-around">
+          <div className='btn-container d-flex justify-content-around'>
             <button
-              className="btn btn-success"
-              id="new-quote"
+              className='btn btn-success'
+              id='new-quote'
               onClick={newQuote}
             >
               New quote
             </button>
             <a
-              className="btn btn-primary"
-              id="tweet-quote"
-              href=""
-              target="_blank"
+              className='btn btn-primary'
+              id='tweet-quote'
+              href=''
+              target='_blank'
               ref={buttonTweet}
             >
-              Post in <i className="fa-brands fa-twitter"></i>
+              Post in <i className='fa-brands fa-twitter'></i>
             </a>
           </div>
         </div>
-        <p className="text-center">
+        <p className='text-center'>
           Original app:&nbsp;
           <a
-            href="https://random-quote-machine.freecodecamp.rocks/"
-            target="_balank"
+            href='https://random-quote-machine.freecodecamp.rocks/'
+            target='_balank'
           >
             FCC : Random Quote Machine
+          </a>
+        </p>
+        <p className='text-center'>
+          <a
+            href='https://github.com/Adri-0311/pomodoro-clock'
+            className='github'
+          >
+            <i className='fa-brands fa-github'></i>
           </a>
         </p>
       </div>

@@ -1,5 +1,7 @@
-.container > .row {
+#root {
+  max-width: 1280px;
   height: 100vh;
+  margin: 0 auto;
 }
 
 #quote-box {
@@ -9,6 +11,10 @@
 
 #quote-box #text {
   color: var(--quote-color);
+}
+
+#quote-box #text q::before{
+  inset: '';
 }
 
 #quote-box #author {
