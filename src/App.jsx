@@ -22,7 +22,7 @@ function App() {
       });
   }, []);
 
-  const setTweetLink = (quote, author) => {
+  const setTweetLink = ({quote, author} = INIT_STATE) => {
     buttonTweet.current.href = `https://twitter.com/intent/tweet?hashtags=quotes&related=freecodecamp&text=${encodeURIComponent(
       `"${quote}" ${author}`
     )}`;
@@ -34,7 +34,7 @@ function App() {
   const getQuote = () => {
     const quote = selectRandomQuote();
     setActualQuote(quote);
-    setTweetLink(quote.quote, quote.author);
+    setTweetLink(quote);
   };
 
   /**
