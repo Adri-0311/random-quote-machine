@@ -1,16 +1,26 @@
 import { useRef, useState, useEffect } from 'react';
-import fetchQuote from './service/fetchQuote';
+import { fetchQuotes } from './service/fetchQuotes';
 import './App.css';
 
 function App() {
   const buttonTweet = useRef(null);
+  const INIT_STATE = {
+    quote: 'Loading quote...',
+    author: 'Loading author...',
+  };
+  const [actualQuote, setActualQuote] = useState(INIT_STATE);
+  let quotesDataRef = useRef([]);
 
-  const [quoteData, setQuoteData] = useState([
-    {
-      quote: 'Loading quote...',
-      author: 'Loading author...',
-    },
-  ]);
+  useEffect(() => {
+    fetchQuotes()
+      .catch((error) => console.error(error))
+      .then((jsonData) => {
+        quotesDataRef.current = jsonData.quotes;
+      })
+      .finally(() => {
+        getQuote();
+      });
+  }, []);
 
   const setTweetLink = (quote, author) => {
     buttonTweet.current.href = `https://twitter.com/intent/tweet?hashtags=quotes&related=freecodecamp&text=${encodeURIComponent(
@@ -18,14 +28,29 @@ function App() {
     )}`;
   };
 
-  const newQuote = () => {
-    fetchQuote().then((data) => {
-      setQuoteData(data);
-      setTweetLink(data[0].quote, data[0].author);
-    });
+  /**
+   * Obtain the new quote to generate the render and tweet link
+   */
+  const getQuote = () => {
+    const quote = selectRandomQuote();
+    setActualQuote(quote);
+    setTweetLink(quote.quote, quote.author);
   };
 
-  useEffect(newQuote, []);
+  /**
+   * Extrac quote object from quotesDataRef array
+   * @returns {quote, author}
+   */
+  const selectRandomQuote = () => {
+    if (quotesDataRef.current.length === 0) {
+      return { quote: 'No more quotes avalible, sorry.' };
+    }
+    const random = Math.floor(Math.random() * quotesDataRef.current.length);
+    const quote = quotesDataRef.current[random];
+    // Delete from quotesData array the extracted quote to prevent duplicies
+    quotesDataRef.current.splice(random, 1);
+    return quote;
+  };
 
   return (
     <div className='container'>
@@ -34,17 +59,19 @@ function App() {
           <blockquote id='text' className='text-center'>
             <p>
               <i className='me-2 fa-solid fa-quote-left'></i>
-              {quoteData[0].quote}
+              {actualQuote.quote}
             </p>
           </blockquote>
           <p id='author' className='text-end'>
-            - <span>{quoteData[0].author}</span>
+            <span>-</span>
+            &nbsp;
+            {actualQuote.author}
           </p>
           <div className='btn-container d-flex justify-content-around'>
             <button
               className='btn btn-success'
               id='new-quote'
-              onClick={newQuote}
+              onClick={getQuote}
             >
               New quote
             </button>
