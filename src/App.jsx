@@ -1,20 +1,27 @@
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useEffect } from 'react';
 import { fetchQuotes } from './service/fetchQuotes';
 import './App.css';
+import { useDispatch, useSelector } from 'react-redux';
+import { newQuote } from './features/quote/quoteSlice';
 
 function App() {
+  // Establecer el acceso al estado de la store de redux
+  const quoteState = useSelector((state) => state.quote);
+  // Declarar el actualizador de la store
+  const dispatch = useDispatch();
+
   const buttonTweet = useRef(null);
   const INIT_STATE = {
     quote: 'Loading quote...',
     author: 'Loading author...',
   };
-  const [actualQuote, setActualQuote] = useState(INIT_STATE);
   let quotesDataRef = useRef([]);
 
   useEffect(() => {
     fetchQuotes()
       .catch((error) => console.error(error))
       .then((jsonData) => {
+        // almacenar el array de citas obtenidas
         quotesDataRef.current = jsonData.quotes;
       })
       .finally(() => {
@@ -22,7 +29,7 @@ function App() {
       });
   }, []);
 
-  const setTweetLink = ({quote, author} = INIT_STATE) => {
+  const setTweetLink = ({ quote, author } = INIT_STATE) => {
     buttonTweet.current.href = `https://twitter.com/intent/tweet?hashtags=quotes&related=freecodecamp&text=${encodeURIComponent(
       `"${quote}" ${author}`
     )}`;
@@ -33,7 +40,8 @@ function App() {
    */
   const getQuote = () => {
     const quote = selectRandomQuote();
-    setActualQuote(quote);
+    // Actualizando la store de redux
+    dispatch(newQuote(quote)); 
     setTweetLink(quote);
   };
 
@@ -59,13 +67,14 @@ function App() {
           <blockquote id='text' className='text-center'>
             <p>
               <i className='me-2 fa-solid fa-quote-left'></i>
-              {actualQuote.quote}
+              {quoteState.quote}
+              <i className='me-2 fa-solid fa-quote-right'></i>
             </p>
           </blockquote>
           <p id='author' className='text-end'>
             <span>-</span>
             &nbsp;
-            {actualQuote.author}
+            {quoteState.author}
           </p>
           <div className='btn-container d-flex justify-content-around'>
             <button
